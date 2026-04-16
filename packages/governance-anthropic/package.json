@@ -1,0 +1,61 @@
+{
+  "name": "@agenticcontrolplane/governance-anthropic",
+  "version": "0.1.0",
+  "description": "Agentic Control Plane adapter for Anthropic SDK and Claude Agent SDK. Govern every tool_use block from Claude.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@agenticcontrolplane/governance": "0.1.0"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": ">=0.30.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": { "optional": true }
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidcrowe/acp-governance-sdks",
+    "directory": "packages/governance-anthropic"
+  },
+  "homepage": "https://agenticcontrolplane.com/integrations/anthropic-agent-sdk",
+  "keywords": [
+    "agentic-control-plane",
+    "acp",
+    "anthropic",
+    "claude",
+    "agent-governance",
+    "tool-use"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

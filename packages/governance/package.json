@@ -1,0 +1,51 @@
+{
+  "name": "@agenticcontrolplane/governance",
+  "version": "0.1.0",
+  "description": "Core SDK for the Agentic Control Plane — govern any tool call from any agent framework. Delegation chain, scope intersection, budget propagation, audit log.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "tsc -p tsconfig.test.json && node --test dist-test/client.test.js",
+    "clean": "rm -rf dist dist-test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidcrowe/acp-governance-sdks",
+    "directory": "packages/governance"
+  },
+  "homepage": "https://agenticcontrolplane.com",
+  "keywords": [
+    "agentic-control-plane",
+    "acp",
+    "agent-governance",
+    "tool-call-audit",
+    "delegation-chain"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

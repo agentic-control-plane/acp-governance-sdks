@@ -1,0 +1,36 @@
+{
+  "name": "acp-governance-sdks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agentic Control Plane SDKs — embed governance, audit, and delegation chains in any agent framework.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "clean": "rm -rf packages/*/dist packages/*/node_modules node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidcrowe/acp-governance-sdks"
+  },
+  "homepage": "https://agenticcontrolplane.com",
+  "keywords": [
+    "agentic-control-plane",
+    "acp",
+    "agent-governance",
+    "agent-to-agent",
+    "delegation-chain",
+    "ai-governance",
+    "tool-call-audit"
+  ]
+}
