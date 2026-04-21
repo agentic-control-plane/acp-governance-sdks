@@ -1,7 +1,7 @@
 {
   "name": "@agenticcontrolplane/governance-anthropic",
-  "version": "0.1.0",
-  "description": "Agentic Control Plane adapter for Anthropic SDK and Claude Agent SDK. Govern every tool_use block from Claude.",
+  "version": "0.2.0",
+  "description": "Agentic Control Plane adapter for Anthropic's Messages API and Claude Agent SDK. One call wraps your tool handlers with governance.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -23,7 +23,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@agenticcontrolplane/governance": "0.1.0"
+    "@agenticcontrolplane/governance": "0.2.0"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": ">=0.30.0"

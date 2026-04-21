@@ -1,6 +1,12 @@
 # @agenticcontrolplane/governance
 
-Core SDK for the [Agentic Control Plane](https://agenticcontrolplane.com). Govern any tool call from any agent framework with one consistent API: PreToolUse → execute → PostToolUse.
+Thin Node SDK for the [Agentic Control Plane](https://agenticcontrolplane.com) governance hook protocol.
+
+Wraps the two endpoints ACP exposes:
+- `POST /govern/tool-use` — pre-tool check (allow / deny / ask)
+- `POST /govern/tool-output` — post-tool audit + PII scan
+
+Same protocol Claude Code uses. Works with any Node agent runtime.
 
 ## Install
 
@@ -8,68 +14,61 @@ Core SDK for the [Agentic Control Plane](https://agenticcontrolplane.com). Gover
 npm install @agenticcontrolplane/governance
 ```
 
-## Quick start
+## Usage
 
-```typescript
-import { GovernanceClient } from "@agenticcontrolplane/governance";
+```ts
+import { withContext, governed } from "@agenticcontrolplane/governance";
 
-const acp = new GovernanceClient({
-  apiKey: process.env.ACP_API_KEY!, // gsk_yourslug_xxxxxxxxxxxx
+// Wrap your tool handlers once.
+const search = governed("web_search", async ({ query }: { query: string }) => {
+  return doSearch(query);  // your code, your credentials
 });
 
-// Wrap any tool call. ACP runs PreToolUse before, PostToolUse after.
-const result = await acp.governTool({
-  tool: "github.repos.create",
-  input: { name: "new-repo", private: true },
-  agent: { agentName: "pr-reviewer", agentTier: "api" },
-  execute: async () => {
-    // your actual tool execution
-    return await github.repos.create({ name: "new-repo", private: true });
-  },
+// In each request handler, bind the end user's JWT to the async context.
+app.post("/run", async (req, res) => {
+  const token = req.header("authorization")!.slice("Bearer ".length);
+  await withContext({ userToken: token }, async () => {
+    const result = await search({ query: req.body.q });
+    // result is the tool's output, or "tool_error: <reason>" on deny.
+    res.json({ result });
+  });
 });
-
-console.log(result.output);     // the tool's output (or redacted version)
-console.log(result.redacted);   // true if ACP redacted the output
-console.log(result.findings);   // PII / injection findings, if any
 ```
 
-## What you get
+## What happens per call
 
-- **PreToolUse enforcement**: deny decisions throw `GovernanceDeniedError` before your tool runs.
-- **PostToolUse scanning**: PII detection, prompt injection scanning, secret redaction.
-- **Audit log entry per call** in your ACP dashboard, tagged with `agent_name`.
-- **Delegation chain attribution**: when this agent invokes another, the chain link is created automatically.
-- **Fail-closed by default**: if ACP is unreachable, tool calls are denied for safety. Switch to `failureMode: "open"` only if you explicitly accept ungoverned calls during outages.
+1. `preToolUse` POSTs to `/govern/tool-use` with `{ tool_name, tool_input, session_id }` + `Authorization: Bearer <user-jwt>`.
+2. Gateway evaluates policy, rate limits, scope, PII → returns `{ decision, reason }`.
+3. On `deny`, the wrapped handler short-circuits with `"tool_error: <reason>"` (model can see and adapt).
+4. On `allow`, your handler runs. Result is sent to `/govern/tool-output` for audit.
+5. If gateway returns `action: "redact"`, the redacted output is returned to the caller.
 
-## API
+## Fail-open
 
-### `new GovernanceClient(options)`
-
-```typescript
-interface GovernanceClientOptions {
-  apiKey: string;             // gsk_… key from cloud.agenticcontrolplane.com
-  baseUrl?: string;           // default: https://api.agenticcontrolplane.com
-  timeoutMs?: number;         // default: 5000
-  failureMode?: "open" | "closed"; // default: "closed"
-}
-```
-
-### `acp.governTool({ tool, input, agent, execute })`
-
-Wraps a tool execution end-to-end. Returns `Promise<GovernResult<T>>`.
-
-### `acp.preToolUse(req)` / `acp.postToolUse(req)`
-
-Manual control for framework adapters that need to interleave governance with framework-specific control flow.
+Network errors, timeouts (5s default), non-2xx responses → tool proceeds with reason `"fail-open"`. Governance is never a single point of failure for the agent.
 
 ## Framework adapters
 
-Use these instead of writing your own integration:
+This package is the core. For framework-native ergonomics see:
 
-- [`@agenticcontrolplane/governance-anthropic`](../governance-anthropic) — Anthropic SDK + Agent SDK
-- `@agenticcontrolplane/governance-openai` (planned) — OpenAI SDK + Agents SDK
-- `acp-governance-crewai` (PyPI, planned) — CrewAI Python adapter
-- `acp-governance-langchain` (PyPI, planned) — LangChain / LangGraph adapter
+- [`@agenticcontrolplane/governance-anthropic`](https://www.npmjs.com/package/@agenticcontrolplane/governance-anthropic) — Anthropic Agent SDK + Messages API
+- [`acp-crewai`](https://pypi.org/project/acp-crewai) (Python) — CrewAI
+- [`acp-langchain`](https://pypi.org/project/acp-langchain) (Python) — LangChain / LangGraph
+
+## API
+
+```ts
+configure(partial: Partial<Config>): void
+getConfig(): Config
+
+withContext(ctx, fn): Promise<T>
+getContext(): GovernanceContext | undefined
+
+preToolUse(toolName, toolInput?): Promise<{ allowed, reason, decision }>
+postToolOutput(toolName, toolInput, toolOutput): Promise<PostToolOutputResponse | null>
+
+governed<I, O>(toolName, handler, opts?): AsyncHandler<I, O | string>
+```
 
 ## License
 

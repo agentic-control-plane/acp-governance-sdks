@@ -1,7 +1,7 @@
 {
   "name": "@agenticcontrolplane/governance",
-  "version": "0.1.0",
-  "description": "Core SDK for the Agentic Control Plane — govern any tool call from any agent framework. Delegation chain, scope intersection, budget propagation, audit log.",
+  "version": "0.2.0",
+  "description": "Thin Node SDK for the Agentic Control Plane governance hook protocol. Wrap any tool call; ACP decides allow/deny/redact.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -20,8 +20,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit",
-    "test": "tsc -p tsconfig.test.json && node --test dist-test/client.test.js",
-    "clean": "rm -rf dist dist-test"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

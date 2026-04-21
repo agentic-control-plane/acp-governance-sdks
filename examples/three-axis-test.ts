@@ -277,22 +277,25 @@ async function clearUserPolicy(uid: string) {
 }
 
 async function setWorkspaceTool(toolName: string, tier: string, rules: any) {
-  // Read-modify-write workspace governance config via Firestore-bound endpoint
-  // is not exposed via REST — using a direct admin-shape PUT to the
-  // policies/governance doc through the same admin auth pattern.
-  // TODO: when a dedicated tool-policy endpoint ships, swap to it.
-  // For now, PUT to /admin/workspacePolicy/tool/:tool/:tier (proposed).
-  // Until then, this stub records what the test WANTS to set.
-  void toolName; void tier; void rules;
+  await adminPut(`/admin/workspacePolicy`, {
+    tools: { [toolName]: { [tier]: rules } },
+  });
 }
 
 async function clearWorkspaceTool(toolName: string) {
-  void toolName;
+  // Read current doc, remove the test tool, write back.
+  const r = await fetch(`${BASE_URL}/${SLUG}/admin/workspacePolicy`, {
+    headers: { authorization: `Bearer ${API_KEY}` },
+  });
+  if (!r.ok) return;
+  const cur = (await r.json()) as any;
+  const tools = { ...(cur?.tools ?? {}) };
+  delete tools[toolName];
+  await adminPut(`/admin/workspacePolicy`, { tools });
 }
 
 async function setWorkspaceMode(mode: "audit" | "enforce") {
-  // Same: needs a workspace-policy admin endpoint. Stubbed.
-  void mode;
+  await adminPut(`/admin/workspacePolicy`, { mode });
 }
 
 // ── Harness ─────────────────────────────────────────────────────────
