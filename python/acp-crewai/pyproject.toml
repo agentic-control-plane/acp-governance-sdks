@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "acp-crewai"
+version = "0.1.0"
+description = "Agentic Control Plane governance for CrewAI agents. Wrap any tool with @governed; ACP decides allow/deny/redact."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "David Crowe" }]
+keywords = ["agentic-control-plane", "acp", "crewai", "agent-governance", "ai-safety"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "acp-governance>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["crewai>=0.70.0"]
+
+[project.urls]
+Homepage = "https://agenticcontrolplane.com"
+Documentation = "https://agenticcontrolplane.com/integrations/crewai"
+Source = "https://github.com/davidcrowe/acp-governance-sdks"
+Issues = "https://github.com/davidcrowe/acp-governance-sdks/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/acp_crewai"]
