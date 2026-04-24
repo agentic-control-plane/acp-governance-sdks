@@ -1,0 +1,13 @@
+[project]
+name = "acp-starter-google-adk"
+version = "0.0.1"
+description = "Minimal ACP-governed agent starter using Google Agent Development Kit."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-governance",
+    "google-adk>=1.31.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-governance = { path = "../../../python/acp-governance", editable = true }

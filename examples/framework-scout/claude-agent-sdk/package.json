@@ -1,0 +1,7 @@
+{
+  "name": "acp-framework-scout-claude-agent-sdk",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Framework Scout reference agent — Claude Agent SDK (TypeScript) variant. Uses @agenticcontrolplane/governance-anthropic (decorator pattern)."
+}

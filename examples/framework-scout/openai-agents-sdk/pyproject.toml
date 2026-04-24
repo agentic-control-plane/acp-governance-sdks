@@ -1,0 +1,14 @@
+[project]
+name = "acp-framework-scout-openai-agents-sdk"
+version = "0.0.1"
+description = "Framework Scout reference agent — OpenAI Agents SDK (Python) variant, decorator-governance pattern."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-governance",
+    "openai-agents>=0.0.19",
+    "requests>=2.32.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-governance = { path = "../../../python/acp-governance", editable = true }

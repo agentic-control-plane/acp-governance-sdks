@@ -1,0 +1,7 @@
+{
+  "name": "acp-starter-vercel-ai-sdk",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Minimal ACP-governed agent starter using the Vercel AI SDK."
+}

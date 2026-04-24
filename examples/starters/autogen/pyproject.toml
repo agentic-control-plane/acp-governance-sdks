@@ -1,0 +1,14 @@
+[project]
+name = "acp-starter-autogen"
+version = "0.0.1"
+description = "Minimal ACP-governed agent starter using Microsoft AutoGen v0.7+."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-governance",
+    "autogen-agentchat>=0.7.0",
+    "autogen-ext[openai]>=0.7.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-governance = { path = "../../../python/acp-governance", editable = true }
