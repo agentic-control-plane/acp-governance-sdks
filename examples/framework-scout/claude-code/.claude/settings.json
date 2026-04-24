@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash",
+      "Read",
+      "Write"
+    ]
+  }
+}

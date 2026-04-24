@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS launchd plist example — runs the Claude Code scout once daily at 09:00.
+  Install:  cp this to ~/Library/LaunchAgents/com.acp.framework-scout.plist
+            launchctl load ~/Library/LaunchAgents/com.acp.framework-scout.plist
+  Logs:     ~/Library/Logs/com.acp.framework-scout.{out,err}
+
+  Linux equivalent: add to crontab -e:
+    0 9 * * * /Users/YOUR_USER/dev/acp-governance-sdks/examples/framework-scout/claude-code/run.sh >> ~/.cache/framework-scout.log 2>&1
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.acp.framework-scout</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/dev/dev/acp-governance-sdks/examples/framework-scout/claude-code/run.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/dev/Library/Logs/com.acp.framework-scout.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/dev/Library/Logs/com.acp.framework-scout.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
