@@ -24,7 +24,7 @@ The same reference agent, re-implemented in every framework and client that Agen
 | 16 | `chatgpt-workspace-agents/` | Client | — | MCP server | |
 | 17 | `google-agents-cli/` | Client | — | MCP / proxy | |
 
-Aider (originally slot #10) dropped — proxy-only, and proxy pattern deprecated from ACP positioning. See FINDINGS.md entry 13.
+Aider dropped — proxy-only, and the proxy pattern is deprecated from ACP positioning.
 
 ## Shared credentials
 
@@ -36,6 +36,3 @@ All implementations read from `~/.framework-scout/creds.env` (mode 600, outside 
 - `README.md` — what the governance pattern is, how to run, known rough edges
 - `package.json` / `pyproject.toml` — deps (TS folders) or install notes (Py folders)
 
-## Findings
-
-See [FINDINGS.md](./FINDINGS.md) for docs/code divergences discovered while building. Feeds the meta-blog-post at the end.

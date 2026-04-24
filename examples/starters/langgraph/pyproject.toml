@@ -1,0 +1,15 @@
+[project]
+name = "acp-starter-langgraph"
+version = "0.0.1"
+description = "Minimal ACP-governed agent starter using LangGraph + LangChain."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-langchain",
+    "langchain>=1.0.0",
+    "langgraph>=1.0.0",
+    "langchain-openai>=0.3.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-langchain = { path = "../../../python/acp-langchain", editable = true }
