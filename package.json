@@ -13,7 +13,14 @@
     "clean": "rm -rf packages/*/dist packages/*/node_modules node_modules"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@ai-sdk/anthropic": "^3.0.71",
+    "@mastra/core": "^0.24.9",
+    "ai": "^6.0.168",
+    "dotenv": "^17.4.2",
+    "resend": "^6.12.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   },
   "engines": {
     "node": ">=18"
