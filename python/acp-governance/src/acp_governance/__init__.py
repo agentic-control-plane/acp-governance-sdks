@@ -29,12 +29,16 @@ from ._config import Config, configure, get_config
 from ._context import GovernanceContext, clear_context, get_context, set_context
 from ._governed import governed
 from ._hook import post_tool_output, pre_tool_use
+from ._spawn import ChildKey, SpawnError, child_context, spawn_subagent
 
 __version__ = "0.1.0"
 __all__ = [
+    "ChildKey",
     "Config",
     "GovernanceContext",
+    "SpawnError",
     "__version__",
+    "child_context",
     "clear_context",
     "configure",
     "get_config",
@@ -43,4 +47,5 @@ __all__ = [
     "post_tool_output",
     "pre_tool_use",
     "set_context",
+    "spawn_subagent",
 ]
