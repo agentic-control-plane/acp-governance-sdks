@@ -1,8 +1,13 @@
 # Agentic Control Plane SDKs
 
-Embed [ACP governance](https://agenticcontrolplane.com) directly in your agent code. Wrap any tool call with `@governed` / `governed()`; before it runs ACP decides allow / deny / redact based on your workspace policy.
+> **For agents that build governed agents.**
 
-Same governance model as Claude Code. Works across coding-agent clients (Claude Code, Cursor) and server-deployed agent frameworks (CrewAI, LangChain, Anthropic SDK).
+Embed [ACP governance](https://agenticcontrolplane.com) directly in your agent code. Two primitives:
+
+1. **Govern your own tool calls.** Wrap any tool with `@governed` / `governed()`; before it runs, ACP decides allow / deny / redact based on your workspace policy.
+2. **Spawn subagents with delegation chains.** Use `spawn_subagent()` + `child_context()` (Python) or the equivalent TypeScript helpers to mint a scope-narrowed child API key for any subagent your agent creates. The gateway intersects scopes with the parent, atomically debits the parent's budget, preserves the originating human's identity (`originSub`), and produces audit logs that trace through the chain — same governance model as in-process delegation, available to any external agent framework. See [`agents-building-agents quickstart`](https://agenticcontrolplane.com/agents/quickstart/).
+
+Works across coding-agent clients (Claude Code, Cursor) and server-deployed agent frameworks (CrewAI, LangChain, Anthropic SDK). Same governance model end-to-end.
 
 ## Packages
 
