@@ -1,0 +1,66 @@
+{
+  "name": "@agenticcontrolplane/proxy",
+  "version": "0.1.0",
+  "description": "Agentic Control Plane credential-brokering SDK. Wrap fetch / axios so outbound calls to GitHub (and future vendors) are routed through ACP — short-lived scoped tokens replace your real OAuth credentials at the boundary.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@agenticcontrolplane/governance": ">=0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@agenticcontrolplane/governance": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@agenticcontrolplane/governance": "0.2.0",
+    "@types/node": "^20.0.0",
+    "axios": "^1.16.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidcrowe/acp-governance-sdks",
+    "directory": "packages/proxy"
+  },
+  "homepage": "https://agenticcontrolplane.com",
+  "keywords": [
+    "agentic-control-plane",
+    "acp",
+    "agent-governance",
+    "credential-brokering",
+    "scoped-tokens",
+    "egress-proxy",
+    "github",
+    "oauth"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
