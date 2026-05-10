@@ -45,7 +45,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidcrowe/acp-governance-sdks",
+    "url": "https://github.com/agentic-control-plane/acp-governance-sdks",
     "directory": "packages/proxy"
   },
   "homepage": "https://agenticcontrolplane.com",
