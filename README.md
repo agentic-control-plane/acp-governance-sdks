@@ -15,16 +15,16 @@ Works across coding-agent clients (Claude Code, Cursor) and server-deployed agen
 
 | Package | Purpose | Status |
 |---|---|---|
-| [`@agenticcontrolplane/governance`](packages/governance) | Thin core SDK — framework-agnostic. Wraps any tool handler. | `0.2.0` |
-| [`@agenticcontrolplane/governance-anthropic`](packages/governance-anthropic) | Adapter for Anthropic Messages API + Claude Agent SDK. | `0.2.0` |
+| [`@agenticcontrolplane/governance`](packages/governance) | Thin core SDK — framework-agnostic. Wraps any tool handler. | [![npm](https://img.shields.io/npm/v/@agenticcontrolplane/governance)](https://www.npmjs.com/package/@agenticcontrolplane/governance) |
+| [`@agenticcontrolplane/governance-anthropic`](packages/governance-anthropic) | Adapter for Anthropic Messages API + Claude Agent SDK. | [![npm](https://img.shields.io/npm/v/@agenticcontrolplane/governance-anthropic)](https://www.npmjs.com/package/@agenticcontrolplane/governance-anthropic) |
 
 **Python** (`python/`):
 
 | Package | Purpose | Status |
 |---|---|---|
-| [`acp-governance`](python/acp-governance) | Thin core SDK — framework-agnostic. | `0.1.0` |
-| [`acp-crewai`](python/acp-crewai) | Adapter for CrewAI (includes `install_crew_hooks` for inter-agent handoff capture). | `0.1.0` |
-| [`acp-langchain`](python/acp-langchain) | Adapter for LangChain / LangGraph. | `0.1.0` |
+| [`acp-governance`](python/acp-governance) | Thin core SDK — framework-agnostic. | [![PyPI](https://img.shields.io/pypi/v/acp-governance)](https://pypi.org/project/acp-governance/) |
+| [`acp-crewai`](python/acp-crewai) | Adapter for CrewAI (includes `install_crew_hooks` for inter-agent handoff capture). | [![PyPI](https://img.shields.io/pypi/v/acp-crewai)](https://pypi.org/project/acp-crewai/) |
+| [`acp-langchain`](python/acp-langchain) | Adapter for LangChain / LangGraph. | [![PyPI](https://img.shields.io/pypi/v/acp-langchain)](https://pypi.org/project/acp-langchain/) |
 
 ## Quick starts
 
@@ -105,6 +105,7 @@ pip install -e python/acp-governance -e python/acp-crewai -e python/acp-langchai
 packages/                             # npm workspace
   governance/                         # @agenticcontrolplane/governance
   governance-anthropic/               # @agenticcontrolplane/governance-anthropic
+examples/                             # worked examples (Anthropic PR reviewer, framework scout)
 python/                               # PyPI packages (each standalone)
   acp-governance/
   acp-crewai/
@@ -129,3 +130,10 @@ cd python/acp-langchain  && python -m build && twine upload dist/*
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Related
+
+- [agentgovbench](https://github.com/agentic-control-plane/agentgovbench) — the 48-scenario benchmark that scores these exact adapters
+- [delegation-chain-spec](https://github.com/agentic-control-plane/delegation-chain-spec) — ADCS, the open spec for the delegation chains these SDKs mint
+- [hermes-acp-plugin](https://github.com/agentic-control-plane/hermes-acp-plugin) — native plugin for Hermes Agent
+- [acp-pr-reviewer-demo](https://github.com/agentic-control-plane/acp-pr-reviewer-demo) — a worked A2A delegation example using these SDKs
