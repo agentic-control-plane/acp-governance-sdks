@@ -9,6 +9,8 @@ Embed [ACP governance](https://agenticcontrolplane.com) directly in your agent c
 
 Works across coding-agent clients (Claude Code, Cursor) and server-deployed agent frameworks (CrewAI, LangChain, Anthropic SDK). Same governance model end-to-end.
 
+See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane.com/series/governed-recipes) — four runnable Python agents (~200 lines each) built on these SDKs. Concepts: [runtime authorization](https://agenticcontrolplane.com/what-is-runtime-authorization) · [Anthropic Agent SDK integration guide](https://agenticcontrolplane.com/integrations/anthropic-agent-sdk)
+
 ## Packages
 
 **Node / TypeScript** (`packages/`):
