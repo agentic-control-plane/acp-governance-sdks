@@ -2,6 +2,10 @@
 
 Minimal template for wiring ACP governance into a LangGraph / LangChain agent.
 
+<img src="acp-langgraph-quickstart.gif" width="820" alt="Terminal recording: a fresh virtualenv, pip install acp-langchain from PyPI, the @tool and @governed decorators stacked on one function, the set_context call that binds identity, then a real LangGraph agent run returning the record it looked up.">
+
+<sub>A real recording — the published package from PyPI into a clean venv, and a live agent run against the gateway. Nothing mocked. Re-record with `../record-quickstart.sh langgraph`. Near-identical to the <a href="../crewai/">CrewAI</a> recording, which is the point: one decorator pattern, whatever framework you're on.</sub>
+
 ## Setup
 
 ```bash
