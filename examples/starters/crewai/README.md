@@ -2,6 +2,10 @@
 
 Minimal template for wiring ACP governance into a CrewAI agent or crew.
 
+<img src="acp-crewai-quickstart.gif" width="820" alt="Terminal recording: a fresh virtualenv, pip install acp-crewai from PyPI, the @tool and @governed decorators stacked on one function, the set_context call that binds identity, then a real crew run returning the record it looked up.">
+
+<sub>A real recording — the published package from PyPI into a clean venv, and a live crew run against the gateway. Nothing mocked. Re-record with `../record-quickstart.sh crewai`.</sub>
+
 ## Setup
 
 ```bash
