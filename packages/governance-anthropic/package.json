@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidcrowe/acp-governance-sdks",
+    "url": "git+https://github.com/davidcrowe/acp-governance-sdks.git",
     "directory": "packages/governance-anthropic"
   },
   "homepage": "https://agenticcontrolplane.com/integrations/anthropic-agent-sdk",
