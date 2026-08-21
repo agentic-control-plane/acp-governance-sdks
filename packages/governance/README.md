@@ -47,6 +47,40 @@ app.post("/run", async (req, res) => {
 
 Network errors, timeouts (5s default), non-2xx responses → tool proceeds with reason `"fail-open"`. Governance is never a single point of failure for the agent.
 
+## Both planes in one call
+
+`governed()` covers what your agent *does*. The ACP proxy covers what it
+*spends*. `init()` wires both — call it before you construct a model client,
+since the SDKs read their config from the environment at construction time:
+
+```ts
+import { init } from "@agenticcontrolplane/governance";
+import Anthropic from "@anthropic-ai/sdk";
+
+init();                            // governance + proxy
+const client = new Anthropic();    // now priced and metered by ACP
+```
+
+Constructing clients explicitly instead? Skip `init()` and pass the options:
+
+```ts
+import { modelClientOptions } from "@agenticcontrolplane/governance";
+
+const client = new Anthropic(modelClientOptions("anthropic"));
+```
+
+Set `ACP_API_KEY=gsk_...` from [the console](https://cloud.agenticcontrolplane.com).
+
+**Routing is all-or-nothing per provider.** `init()` either sets both the base
+URL and the key, or leaves that provider completely alone and warns — a
+half-applied provider (ACP's URL against your real vendor key) is just a 401.
+So if `OPENAI_BASE_URL` already points at your own gateway, ACP won't silently
+reroute you; it tells you those calls aren't being priced.
+
+Three API shapes, each on its own mount — `"anthropic"`, `"openai"` (chat
+completions), and `"openai-responses"`. The last two are **not**
+interchangeable: `/v1` serves chat completions, `/openai/v1` serves responses.
+
 ## Framework adapters
 
 This package is the core. For framework-native ergonomics see:
@@ -68,6 +102,12 @@ preToolUse(toolName, toolInput?): Promise<{ allowed, reason, decision }>
 postToolOutput(toolName, toolInput, toolOutput): Promise<PostToolOutputResponse | null>
 
 governed<I, O>(toolName, handler, opts?): AsyncHandler<I, O | string>
+
+// proxy plane — price and meter model calls
+init(options?: InitOptions): Record<string, string>   // both planes
+modelBaseUrl(shape?: ModelShape): string
+modelClientOptions(shape?: ModelShape): { baseURL, apiKey }
+apiKey(): string                                      // reads ACP_API_KEY
 ```
 
 ## License
