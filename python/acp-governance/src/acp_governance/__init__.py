@@ -46,7 +46,7 @@ from ._model import (
 )
 from ._spawn import ChildKey, SpawnError, child_context, spawn_subagent
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = [
     "ChildKey",
     "Config",

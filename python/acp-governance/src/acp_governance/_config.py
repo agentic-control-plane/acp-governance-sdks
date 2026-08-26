@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 _DEFAULT_BASE_URL = "https://api.agenticcontrolplane.com"
 _DEFAULT_TIMEOUT_S = 5.0
-_DEFAULT_CLIENT = "acp-governance-py/0.1.0"
+_DEFAULT_CLIENT = "acp-governance-py/0.2.0"
 
 
 @dataclass
