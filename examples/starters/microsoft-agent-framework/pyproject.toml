@@ -1,0 +1,14 @@
+[project]
+name = "acp-starter-microsoft-agent-framework"
+version = "0.0.1"
+description = "Minimal ACP-governed agent starter using Microsoft Agent Framework."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-governance",
+    "agent-framework-core>=1.15.0",
+    "agent-framework-anthropic",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-governance = { path = "../../../python/acp-governance", editable = true }
