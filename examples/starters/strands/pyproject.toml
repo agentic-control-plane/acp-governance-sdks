@@ -1,0 +1,16 @@
+[project]
+name = "acp-starter-strands"
+version = "0.0.1"
+description = "Minimal ACP-governed agent starter using AWS Strands Agents."
+requires-python = ">=3.10"
+dependencies = [
+    "acp-governance",
+    "strands-agents[anthropic]>=1.50.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv.sources]
+acp-governance = { path = "../../../python/acp-governance", editable = true }
+
+[tool.setuptools]
+py-modules = ["starter", "acp_hooks", "verify"]

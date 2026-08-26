@@ -1,13 +1,15 @@
 [project]
 name = "acp-starter-pydantic-ai"
-version = "0.0.1"
+version = "0.0.2"
 description = "Minimal ACP-governed agent starter using Pydantic AI."
 requires-python = ">=3.10"
 dependencies = [
     "acp-governance",
-    "pydantic-ai>=1.0.0",
+    "acp-pydantic-ai",
+    "pydantic-ai>=2.0.0",
     "python-dotenv>=1.0.0",
 ]
 
 [tool.uv.sources]
 acp-governance = { path = "../../../python/acp-governance", editable = true }
+acp-pydantic-ai = { path = "../../../python/acp-pydantic-ai", editable = true }
