@@ -7,6 +7,14 @@
  *   POST /govern/tool-use     — pre-tool check (allow/deny/ask)
  *   POST /govern/tool-output  — post-tool audit + PII scan
  *
+ * Both planes in one call — governance for what the agent *does*, the ACP
+ * proxy for what it *spends*:
+ *
+ *   import { init } from "@agenticcontrolplane/governance";
+ *
+ *   init();                          // before constructing any model client
+ *   const client = new Anthropic();  // now priced and metered by ACP
+ *
  * Usage in a server handler:
  *
  *   import { withContext, governed } from "@agenticcontrolplane/governance";
@@ -26,6 +34,14 @@ export { configure, getConfig } from "./config.js";
 export { getContext, withContext } from "./context.js";
 export { postToolOutput, preToolUse } from "./hook.js";
 export { governed } from "./governed.js";
+export {
+  ModelConfigError,
+  apiKey,
+  init,
+  modelBaseUrl,
+  modelClientOptions,
+} from "./model.js";
+export type { InitOptions, ModelShape } from "./model.js";
 export type {
   Config,
   Decision,
