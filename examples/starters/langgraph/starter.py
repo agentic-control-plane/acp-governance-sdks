@@ -1,13 +1,15 @@
 """
 ACP Starter — LangGraph (Python)
 
-The minimum code to wire ACP governance into a LangGraph agent. Copy this
-folder, swap the placeholder tool for your real one, ship.
+The minimum code to wire ACP policy & audit into a LangChain 1.x /
+LangGraph agent. Copy this folder, swap the placeholder tool for your
+real one, ship.
 
-Governance pattern: decorator. `@governed("tool_name")` is stacked under
-LangChain's `@tool`, so every tool call flows through ACP's pre/post hooks.
-Denials return a tool_error string that the agent sees as tool output and
-adapts to.
+Pattern: middleware (langchain >= 1.3.3). `ACPMiddleware()` registers on
+`create_agent`'s middleware stack; its tool-call wrap hook governs EVERY
+tool — no per-function decorators. Denials mean the tool never runs; the
+model receives "tool_error: <reason>" as the tool result and adapts.
+Redacted outputs replace the original before the model sees them.
 
 Run:  bash run.sh
 """
@@ -20,7 +22,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from acp_langchain import configure, governed, set_context
+from acp_langchain import ACPMiddleware, configure, set_context
 from langchain.agents import create_agent
 from langchain.tools import tool
 
@@ -30,26 +32,23 @@ for v in ("OPENAI_API_KEY", "ACP_USER_TOKEN"):
     if not os.environ.get(v):
         raise SystemExit(f"Missing {v} — copy .env.example → .env")
 
-# ── 2. Point the governance SDK at your ACP gateway. Once per process.
+# ── 2. Point the SDK at your ACP gateway. Once per process.
 configure(
     base_url=os.environ.get("ACP_GATEWAY_URL", "https://api.agenticcontrolplane.com"),
-    client_header="acp-langgraph-starter/0.1.0",
+    client_header="acp-langgraph-starter/0.2.0",
 )
 
 
-# ── 3. Your tool. `@tool` registers it with LangChain; `@governed`
-# wraps the call in ACP's pre/post hooks. Order matters — @governed
-# must be INSIDE @tool so LangChain hands off to the wrapped version.
+# ── 3. Your tool. Just `@tool` — ACPMiddleware below already covers it.
 # REPLACE the body with your real logic (DB lookup, API call, etc.).
 @tool
-@governed("lookup_record")
 def lookup_record(id: str) -> str:
     """Look up a record by ID. Replace with your real tool description."""
     return json.dumps({"id": id, "status": "placeholder", "note": "replace me"})
 
 
 def main() -> None:
-    # ── 4. Bind identity for every governance call inside. Without this
+    # ── 4. Bind identity for every policy call inside. Without this
     # set_context call, ACP pre/post hooks silently no-op.
     set_context(
         user_token=os.environ["ACP_USER_TOKEN"],
@@ -57,12 +56,14 @@ def main() -> None:
         agent_tier="background",
     )
 
-    # ── 5. Build the agent. `create_agent` is the 2026 idiom (replaces
-    # the legacy `langgraph.prebuilt.create_react_agent`). Passes the
-    # model string + tools; LangGraph handles the tool-use loop.
+    # ── 5. Build the agent. `create_agent` is the LangChain 1.x idiom
+    # (replaces the legacy `langgraph.prebuilt.create_react_agent`).
+    # One middleware line governs every tool — the one above and any
+    # you add later.
     agent = create_agent(
         model="openai:gpt-4o-mini",
         tools=[lookup_record],
+        middleware=[ACPMiddleware()],
     )
 
     result = agent.invoke(
