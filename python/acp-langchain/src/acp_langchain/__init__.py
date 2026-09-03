@@ -1,4 +1,4 @@
-"""acp-langchain — Agentic Control Plane policy & audit for LangChain / LangGraph.
+"""acp-langchain — Agentic Control Plane policy & audit for LangChain / LangGraph / Deep Agents.
 
 One registration governs every tool. ACPMiddleware is a LangChain 1.x
 AgentMiddleware whose tool-call wrap hooks run ACP's pre/post protocol
@@ -36,6 +36,11 @@ The v0.1-era decorator pattern (`@tool` over `@governed("name")`) still
 works on any LangChain version and is re-exported here for compatibility;
 ACPMiddleware is the recommended path on langchain >= 1.3.3. Don't combine
 both on the same tool, or the call is checked (and audited) twice.
+
+Deep Agents: `from acp_langchain.deepagents import create_deep_agent` —
+same signature as deepagents', with ACP on the main agent AND every
+subagent (stock create_deep_agent does not propagate user middleware to
+subagents, so their tool calls would run unchecked).
 """
 from acp_governance import (
     Config,
@@ -50,7 +55,7 @@ from acp_governance import (
     set_context,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __all__ = [
     "ACPMiddleware",
     "Config",
