@@ -1,6 +1,6 @@
 # acp-langchain
 
-[Agentic Control Plane](https://agenticcontrolplane.com) policy & audit for [LangChain](https://langchain.com) and [LangGraph](https://langchain-ai.github.io/langgraph/) agents.
+[Agentic Control Plane](https://agenticcontrolplane.com) policy & audit for [LangChain](https://langchain.com), [LangGraph](https://langchain-ai.github.io/langgraph/), and [Deep Agents](https://github.com/langchain-ai/deepagents).
 
 Register `ACPMiddleware()` once on `create_agent`. Before any tool runs, ACP decides allow / deny / redact based on your workspace's policy, the end user's scopes, rate limits, and PII detection — for every tool the agent has, with zero per-function decorators.
 
@@ -84,6 +84,40 @@ ACPMiddleware(tools=["send_email", "delete_record"])   # govern only these
 ACPMiddleware(exclude=["get_time"])                    # govern all but these
 ```
 
+## Deep Agents
+
+[Deep Agents](https://github.com/langchain-ai/deepagents) is LangChain's harness on top of `create_agent` (planning, filesystem, subagents, skills, memory, HITL). It takes the same `middleware=` list, so `ACPMiddleware()` already governs the main agent's tools. It does **not** reach the subagents: `create_deep_agent` builds each declarative subagent with its own middleware stack and does not inherit user-supplied middleware, and the auto-added `general-purpose` subagent inherits only middleware matching its default slots. Net effect with plain `middleware=[ACPMiddleware()]`: one `task` row, then every tool call inside the subagent runs unchecked and unaudited. Verified on `deepagents` 0.7.13 (`tests/test_deepagents.py`).
+
+Use this instead:
+
+```python
+from acp_langchain.deepagents import create_deep_agent   # same signature as deepagents'
+
+agent = create_deep_agent(
+    model="anthropic:claude-sonnet-4-6",
+    tools=[lookup_record, send_email],
+    subagents=[{"name": "researcher", "description": "...", "system_prompt": "..."}],
+)
+```
+
+ACP is on the main agent, on every declarative subagent, and on a governed `general-purpose` spec that replaces the stock one (same name, description, and prompt, so the model's view of `task` is unchanged). Pass `acp=ACPMiddleware(exclude=[...])` to scope it.
+
+Already calling `deepagents.create_deep_agent` directly? Wrap the subagents list:
+
+```python
+from deepagents import create_deep_agent
+from acp_langchain import ACPMiddleware
+from acp_langchain.deepagents import govern_subagents
+
+agent = create_deep_agent(model=..., tools=[...],
+                          middleware=[ACPMiddleware()],
+                          subagents=govern_subagents(my_subagents))
+```
+
+Compiled subagents (`runnable=`) and remote ones (`graph_id=`) are built elsewhere, so ACP cannot be injected here; they pass through unchanged and a `UserWarning` names each one. Register `ACPMiddleware` where you build those graphs. Subagent tool calls share the parent request's `session_id` (contextvars carry through the `task` call), so they group under the same session in Activity.
+
+Install: `pip install "acp-langchain[deepagents]"`.
+
 ## Decorator pattern (v0.1-era, still works)
 
 Before LangChain 1.x middleware, this package's story was stacking `@governed` under the tool decorator:
@@ -125,6 +159,7 @@ configure(base_url=..., timeout_s=..., client_header=...)
 - [`acp-pydantic-ai`](https://pypi.org/project/acp-pydantic-ai) — same story for Pydantic AI
 - [`acp-crewai`](https://pypi.org/project/acp-crewai) — same story for CrewAI
 - [LangChain integration guide](https://agenticcontrolplane.com/integrations/langgraph)
+- [Deep Agents integration guide](https://agenticcontrolplane.com/integrations/deepagents)
 
 ## License
 

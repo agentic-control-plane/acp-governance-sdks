@@ -11,7 +11,8 @@ Runnable code — one placeholder tool, all the governance wiring pre-written, `
 | [`claude-agent-sdk/`](./claude-agent-sdk/) | TypeScript | Decorator (`governHandlers` + `withContext`) | Anthropic Messages API, custom tool-use loop |
 | [`openai-agents-sdk/`](./openai-agents-sdk/) | Python | Native tool guardrails (v0.14+) | `tool_input_guardrails` / `tool_output_guardrails` |
 | [`crewai/`](./crewai/) | Python | Decorator stack (`@tool` → `@governed`) | Inter-agent handoffs via `install_crew_hooks` |
-| [`langgraph/`](./langgraph/) | Python | Decorator stack (`@tool` → `@governed`) | Uses `create_agent` (2026 idiom) |
+| [`langgraph/`](./langgraph/) | Python | Middleware (`create_agent(middleware=[ACPMiddleware()])`) | One registration covers every tool |
+| [`deepagents/`](./deepagents/) | Python | Drop-in `create_deep_agent` from `acp_langchain.deepagents` | Subagents governed too (stock Deep Agents leaves them unchecked) |
 | [`pydantic-ai/`](./pydantic-ai/) | Python | Decorator stack (`@agent.tool_plain` → `@governed`) | Anthropic default via model string |
 | [`vercel-ai-sdk/`](./vercel-ai-sdk/) | TypeScript | Inline `governed()` in tool `execute` | `ai` v6, `stopWhen: stepCountIs(n)` |
 | [`mastra/`](./mastra/) | TypeScript | Inline `governed()` in `createTool` | Mastra model router (e.g. `openai/gpt-4o-mini`) |
@@ -56,6 +57,6 @@ Each SDK starter has a corresponding full-fat demo in [`../framework-scout/`](..
 
 - **TypeScript + Anthropic direct?** → `claude-agent-sdk/`
 - **Python + OpenAI?** → `openai-agents-sdk/`
-- **Python + CrewAI / LangGraph / Pydantic AI / AutoGen / Google ADK?** → pick the matching folder
+- **Python + CrewAI / LangGraph / Deep Agents / Pydantic AI / AutoGen / Google ADK?** → pick the matching folder
 - **TypeScript + Vercel / Mastra?** → pick the matching folder
 - **Using Claude Code / Codex / Cursor / Cline / Claude Desktop / Zed?** → the matching client starter

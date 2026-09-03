@@ -26,7 +26,7 @@ See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane
 |---|---|---|
 | [`acp-governance`](python/acp-governance) | Thin core SDK — framework-agnostic. | [![PyPI](https://img.shields.io/pypi/v/acp-governance)](https://pypi.org/project/acp-governance/) |
 | [`acp-crewai`](python/acp-crewai) | Adapter for CrewAI (includes `install_crew_hooks` for inter-agent handoff capture). | [![PyPI](https://img.shields.io/pypi/v/acp-crewai)](https://pypi.org/project/acp-crewai/) |
-| [`acp-langchain`](python/acp-langchain) | Adapter for LangChain / LangGraph. | [![PyPI](https://img.shields.io/pypi/v/acp-langchain)](https://pypi.org/project/acp-langchain/) |
+| [`acp-langchain`](python/acp-langchain) | Adapter for LangChain / LangGraph, plus Deep Agents with subagent coverage (`acp_langchain.deepagents`). | [![PyPI](https://img.shields.io/pypi/v/acp-langchain)](https://pypi.org/project/acp-langchain/) |
 
 ## Quick starts
 
