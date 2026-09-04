@@ -66,17 +66,22 @@ def run(topic: str, authorization: str = Header(...)):
     return {"result": str(crew.kickoff())}
 ```
 
-### Python (LangChain / LangGraph)
+### Python (LangChain / LangGraph / Deep Agents)
 
 ```python
-from langchain_core.tools import tool
-from acp_langchain import governed, set_context
+from langchain.agents import create_agent
+from langchain.tools import tool
+from acp_langchain import ACPMiddleware, set_context
 
 @tool
-@governed("web_search")
 def web_search(query: str) -> str:
     return do_search(query)
+
+agent = create_agent(model="openai:gpt-4o-mini", tools=[web_search],
+                     middleware=[ACPMiddleware()])   # every tool, one registration
 ```
+
+Deep Agents: `from acp_langchain.deepagents import create_deep_agent` — same signature as deepagents', with ACP on the main agent and every subagent. Legacy chains / custom `StateGraph`: stack `@governed("web_search")` under `@tool`.
 
 ## Protocol
 
