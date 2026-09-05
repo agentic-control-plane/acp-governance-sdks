@@ -1,6 +1,6 @@
 {
   "name": "@agenticcontrolplane/governance",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Thin Node SDK for the Agentic Control Plane governance hook protocol. Wrap any tool call; ACP decides allow/deny/redact.",
   "type": "module",
   "main": "./dist/index.js",

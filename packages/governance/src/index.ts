@@ -33,6 +33,7 @@
 export { configure, getConfig } from "./config.js";
 export { getContext, withContext } from "./context.js";
 export { postToolOutput, preToolUse } from "./hook.js";
+export type { UngovernedCause } from "./hook.js";
 export { governed } from "./governed.js";
 export {
   ModelConfigError,
