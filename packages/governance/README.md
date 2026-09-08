@@ -45,7 +45,7 @@ app.post("/run", async (req, res) => {
 
 ## Fail-open
 
-Network errors, timeouts (5s default), non-2xx responses → tool proceeds with reason `"fail-open"`. Governance is never a single point of failure for the agent.
+Network errors, timeouts (5s default), or a gateway answer with no decision → the tool proceeds with reason `"fail-open (<cause>): <detail>"`, where the cause is one of `not-configured` (no `withContext()` in scope), `unreachable`, or `gateway-error`. Governance is never a single point of failure for the agent — and never silent about it: the first ungoverned call per cause per process is announced on `console.warn`, and every ungoverned call appends a line to `~/.acp/lapse.log` (`ACP_LAPSE_LOG=<path>` overrides, `ACP_LAPSE_LOG=off` disables) — the same ledger the Claude Code hook writes. A 4xx that carries a decision (a 429 rate-limit deny, say) is honored as the verdict, not treated as an outage.
 
 ## Both planes in one call
 

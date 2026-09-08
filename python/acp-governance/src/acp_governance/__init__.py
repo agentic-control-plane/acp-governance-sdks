@@ -36,7 +36,7 @@ Framework adapters with the same API:
 from ._config import Config, configure, get_config
 from ._context import GovernanceContext, clear_context, get_context, set_context
 from ._governed import governed
-from ._hook import post_tool_output, pre_tool_use
+from ._hook import UngovernedWarning, post_tool_output, pre_tool_use
 from ._model import (
     ModelConfigError,
     api_key,
@@ -46,13 +46,14 @@ from ._model import (
 )
 from ._spawn import ChildKey, SpawnError, child_context, spawn_subagent
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __all__ = [
     "ChildKey",
     "Config",
     "GovernanceContext",
     "ModelConfigError",
     "SpawnError",
+    "UngovernedWarning",
     "__version__",
     "api_key",
     "child_context",

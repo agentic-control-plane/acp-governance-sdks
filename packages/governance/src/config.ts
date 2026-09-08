@@ -6,7 +6,7 @@ const DEFAULT_TIMEOUT_MS = 5000;
 let current: Config = {
   baseUrl: process.env.ACP_BASE_URL ?? DEFAULT_BASE_URL,
   timeoutMs: DEFAULT_TIMEOUT_MS,
-  clientHeader: "acp-governance-js/0.2.0",
+  clientHeader: "acp-governance-js/0.2.1",
 };
 
 export function getConfig(): Config {
