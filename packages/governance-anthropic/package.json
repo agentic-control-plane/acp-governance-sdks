@@ -15,15 +15,17 @@
   "files": [
     "dist",
     "src",
+    "!src/**/*.test.ts",
     "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepack": "npm run clean && npm run build",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@agenticcontrolplane/governance": "0.2.0"
+    "@agenticcontrolplane/governance": "^0.2.1"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": ">=0.30.0"
