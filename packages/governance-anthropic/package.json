@@ -1,6 +1,6 @@
 {
   "name": "@agenticcontrolplane/governance-anthropic",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Agentic Control Plane adapter for Anthropic's Messages API and Claude Agent SDK. One call wraps your tool handlers with governance.",
   "type": "module",
   "main": "./dist/index.js",
