@@ -5,7 +5,7 @@ TypeScript and Python SDKs that wrap your agent's tools so each call is checked 
 1. **Govern your own tool calls.** Wrap any tool with `@governed` / `governed()`. Before it runs, ACP decides allow, ask or deny based on your workspace policy, and output can be redacted on the way back.
 2. **Spawn subagents with delegation chains.** Use `spawn_subagent()` + `child_context()` (Python) or the equivalent TypeScript helpers to mint a scope-narrowed child API key for any subagent your agent creates. The gateway intersects scopes with the parent, atomically debits the parent's budget, keeps the originating human's identity (`originSub`), and produces audit logs that trace through the chain. See the [agents-building-agents quickstart](https://agenticcontrolplane.com/agents/quickstart/).
 
-The adapters cover server-deployed agent frameworks: CrewAI, LangChain and the Anthropic SDK.
+The adapters cover server-deployed agent frameworks: CrewAI, LangChain, Pydantic AI and the Anthropic SDK.
 
 See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane.com/series/governed-recipes): four runnable Python agents (~200 lines each) built on these SDKs. Concepts: [runtime authorization](https://agenticcontrolplane.com/what-is-runtime-authorization) · [Anthropic Agent SDK integration guide](https://agenticcontrolplane.com/integrations/anthropic-agent-sdk)
 
@@ -87,7 +87,7 @@ All packages speak the same wire protocol to the ACP gateway, the same shape Cla
 
 - `POST /govern/tool-use`: `{ tool_name, tool_input, session_id }` + `Authorization: Bearer <user-jwt>` returns `{ decision: "allow" | "deny" | "ask", reason? }`
 - `POST /govern/tool-output`: same + `tool_output` returns `{ action: "pass" | "redact" | "block", modified_output?, findings? }`
-- Fail-open on network errors and timeouts (5s default). The call proceeds, and the reason is recorded as `fail-open (unreachable)` or similar so the lapse is visible.
+- Fail-open on network errors, timeouts (5s default), gateway 5xx and a missing configuration. The call proceeds, and the reason is recorded as `fail-open (unreachable)` or similar so the lapse is visible.
 
 Third-party frameworks that don't have a first-class adapter can call these endpoints directly. The snippet is about 20 lines in any language.
 
