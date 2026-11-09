@@ -1,15 +1,13 @@
 # Agentic Control Plane SDKs
 
-> **For agents that build governed agents.**
+TypeScript and Python SDKs that wrap your agent's tools so each call is checked by [ACP](https://agenticcontrolplane.com) before it runs, and that give each subagent a narrower API key than its parent. Two things you can do:
 
-Embed [ACP governance](https://agenticcontrolplane.com) directly in your agent code. Two primitives:
+1. **Govern your own tool calls.** Wrap any tool with `@governed` / `governed()`. Before it runs, ACP decides allow, ask or deny based on your workspace policy, and output can be redacted on the way back.
+2. **Spawn subagents with delegation chains.** Use `spawn_subagent()` + `child_context()` (Python) or the equivalent TypeScript helpers to mint a scope-narrowed child API key for any subagent your agent creates. The gateway intersects scopes with the parent, atomically debits the parent's budget, keeps the originating human's identity (`originSub`), and produces audit logs that trace through the chain. See the [agents-building-agents quickstart](https://agenticcontrolplane.com/agents/quickstart/).
 
-1. **Govern your own tool calls.** Wrap any tool with `@governed` / `governed()`; before it runs, ACP decides allow / deny / redact based on your workspace policy.
-2. **Spawn subagents with delegation chains.** Use `spawn_subagent()` + `child_context()` (Python) or the equivalent TypeScript helpers to mint a scope-narrowed child API key for any subagent your agent creates. The gateway intersects scopes with the parent, atomically debits the parent's budget, preserves the originating human's identity (`originSub`), and produces audit logs that trace through the chain — same governance model as in-process delegation, available to any external agent framework. See [`agents-building-agents quickstart`](https://agenticcontrolplane.com/agents/quickstart/).
+The adapters cover server-deployed agent frameworks: CrewAI, LangChain, Pydantic AI and the Anthropic SDK.
 
-Works across coding-agent clients (Claude Code, Cursor) and server-deployed agent frameworks (CrewAI, LangChain, Anthropic SDK). Same governance model end-to-end.
-
-See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane.com/series/governed-recipes) — four runnable Python agents (~200 lines each) built on these SDKs. Concepts: [runtime authorization](https://agenticcontrolplane.com/what-is-runtime-authorization) · [Anthropic Agent SDK integration guide](https://agenticcontrolplane.com/integrations/anthropic-agent-sdk)
+See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane.com/series/governed-recipes): four runnable Python agents (~200 lines each) built on these SDKs. Concepts: [runtime authorization](https://agenticcontrolplane.com/what-is-runtime-authorization) · [Anthropic Agent SDK integration guide](https://agenticcontrolplane.com/integrations/anthropic-agent-sdk)
 
 ## Packages
 
@@ -17,14 +15,14 @@ See it in working code: the [Governed Agent Recipes](https://agenticcontrolplane
 
 | Package | Purpose | Status |
 |---|---|---|
-| [`@agenticcontrolplane/governance`](packages/governance) | Thin core SDK — framework-agnostic. Wraps any tool handler. | [![npm](https://img.shields.io/npm/v/@agenticcontrolplane/governance)](https://www.npmjs.com/package/@agenticcontrolplane/governance) |
+| [`@agenticcontrolplane/governance`](packages/governance) | Thin core SDK, framework-agnostic. Wraps any tool handler. | [![npm](https://img.shields.io/npm/v/@agenticcontrolplane/governance)](https://www.npmjs.com/package/@agenticcontrolplane/governance) |
 | [`@agenticcontrolplane/governance-anthropic`](packages/governance-anthropic) | Adapter for Anthropic Messages API + Claude Agent SDK. | [![npm](https://img.shields.io/npm/v/@agenticcontrolplane/governance-anthropic)](https://www.npmjs.com/package/@agenticcontrolplane/governance-anthropic) |
 
 **Python** (`python/`):
 
 | Package | Purpose | Status |
 |---|---|---|
-| [`acp-governance`](python/acp-governance) | Thin core SDK — framework-agnostic. | [![PyPI](https://img.shields.io/pypi/v/acp-governance)](https://pypi.org/project/acp-governance/) |
+| [`acp-governance`](python/acp-governance) | Thin core SDK, framework-agnostic. | [![PyPI](https://img.shields.io/pypi/v/acp-governance)](https://pypi.org/project/acp-governance/) |
 | [`acp-crewai`](python/acp-crewai) | Adapter for CrewAI (includes `install_crew_hooks` for inter-agent handoff capture). | [![PyPI](https://img.shields.io/pypi/v/acp-crewai)](https://pypi.org/project/acp-crewai/) |
 | [`acp-langchain`](python/acp-langchain) | Adapter for LangChain / LangGraph, plus Deep Agents with subagent coverage (`acp_langchain.deepagents`). | [![PyPI](https://img.shields.io/pypi/v/acp-langchain)](https://pypi.org/project/acp-langchain/) |
 
@@ -81,17 +79,17 @@ agent = create_agent(model="openai:gpt-4o-mini", tools=[web_search],
                      middleware=[ACPMiddleware()])   # every tool, one registration
 ```
 
-Deep Agents: `from acp_langchain.deepagents import create_deep_agent` — same signature as deepagents', with ACP on the main agent and every subagent. Legacy chains / custom `StateGraph`: stack `@governed("web_search")` under `@tool`.
+Deep Agents: `from acp_langchain.deepagents import create_deep_agent`, same signature as deepagents', with ACP on the main agent and every subagent. Legacy chains / custom `StateGraph`: stack `@governed("web_search")` under `@tool`.
 
 ## Protocol
 
-All packages speak the same wire protocol to the ACP gateway — same shape Claude Code's hook uses:
+All packages speak the same wire protocol to the ACP gateway, the same shape Claude Code's hook uses:
 
-- `POST /govern/tool-use` — `{ tool_name, tool_input, session_id }` + `Authorization: Bearer <user-jwt>` → `{ decision: "allow" | "deny" | "ask", reason? }`
-- `POST /govern/tool-output` — same + `tool_output` → `{ action: "pass" | "redact" | "block", modified_output?, findings? }`
-- Fail-open on network errors / timeout (5s default).
+- `POST /govern/tool-use`: `{ tool_name, tool_input, session_id }` + `Authorization: Bearer <user-jwt>` returns `{ decision: "allow" | "deny" | "ask", reason? }`
+- `POST /govern/tool-output`: same + `tool_output` returns `{ action: "pass" | "redact" | "block", modified_output?, findings? }`
+- Fail-open on network errors, timeouts (5s default), gateway 5xx and a missing configuration. The call proceeds, and the reason is recorded as `fail-open (unreachable)` or similar so the lapse is visible.
 
-Third-party frameworks that don't have a first-class adapter can call these endpoints directly — the snippet is ~20 lines in any language.
+Third-party frameworks that don't have a first-class adapter can call these endpoints directly. The snippet is about 20 lines in any language.
 
 ## Development
 
@@ -119,28 +117,17 @@ python/                               # PyPI packages (each standalone)
   acp-langchain/
 ```
 
-## Publishing
+## Status
 
 Pre-release. Until `1.0`, expect API changes. Pin exact versions in production.
 
-```bash
-# Node
-cd packages/governance && npm publish --access public --provenance
-cd packages/governance-anthropic && npm publish --access public --provenance
-
-# Python
-cd python/acp-governance && python -m build && twine upload dist/*
-cd python/acp-crewai     && python -m build && twine upload dist/*
-cd python/acp-langchain  && python -m build && twine upload dist/*
-```
-
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
 
 ## Related
 
-- [agentgovbench](https://github.com/agentic-control-plane/agentgovbench) — the 48-scenario benchmark that scores these exact adapters
-- [delegation-chain-spec](https://github.com/agentic-control-plane/delegation-chain-spec) — ADCS, the open spec for the delegation chains these SDKs mint
-- [hermes-acp-plugin](https://github.com/agentic-control-plane/hermes-acp-plugin) — native plugin for Hermes Agent
-- [acp-pr-reviewer-demo](https://github.com/agentic-control-plane/acp-pr-reviewer-demo) — a worked A2A delegation example using these SDKs
+- [agentgovbench](https://github.com/agentic-control-plane/agentgovbench): the 48-scenario benchmark that scores these adapters
+- [delegation-chain-spec](https://github.com/agentic-control-plane/delegation-chain-spec): ADCS, the open spec for the delegation chains these SDKs mint
+- [hermes-acp-plugin](https://github.com/agentic-control-plane/hermes-acp-plugin): native plugin for Hermes Agent
+- [acp-pr-reviewer-demo](https://github.com/agentic-control-plane/acp-pr-reviewer-demo): a worked A2A delegation example using these SDKs
